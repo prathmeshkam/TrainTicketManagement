@@ -1,0 +1,76 @@
+Session Management
+
+Create a LogoutServlet
+package controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/LogoutServlet")
+public class LogoutServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // Destroy session
+        }
+        response.sendRedirect("login.jsp"); // Redirect to login page
+    }
+}
+
+
+Login.jsp
+<%
+    String errorMsg = request.getParameter("error");
+    if (errorMsg != null && errorMsg.equals("sessionExpired")) {
+%>
+    <script>
+        alert("Your session has expired. Please log in again.");
+    </script>
+<%
+    }
+%>
+
+
+Add above at start of a page.
+
+SearchTrainServlet
+
+ HttpSession session = request.getSession(false); // Don't create a new session
+		    if (session == null || session.getAttribute("username") == null) {
+		        response.sendRedirect("login.jsp?error=sessionExpired");
+		        return;
+		    }
+
+searchTrain.jsp
+<%
+    String usersession = (String) session.getAttribute("username");
+    if (usersession == null) {
+        response.sendRedirect("../login.jsp?error=sessionExpired");
+        return;
+    }
+%>
+
+At start of a page.
+
+
+userportal.jsp
+At start
+<%
+ session.setMaxInactiveInterval(10);  Here 10 *  60 --- !0 - min and 60 Second = 600sec
+        String usersession = (String)session.getAttribute("username");
+        if(usersession == null)
+        {
+        	response.sendRedirect("../login.jsp?error=sessionExpired");
+        	return;
+        }
+        %>
+
+
+<a href="<%= request.getContextPath() %>/LogoutServlet" class="logout-btn">Logout</a>
+Instead of a login.jsp redirect it to the LogoutServlet.
