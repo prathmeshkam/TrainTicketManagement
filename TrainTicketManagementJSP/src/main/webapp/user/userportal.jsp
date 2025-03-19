@@ -1,4 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+ <%
+ session.setMaxInactiveInterval(10 * 60); 
+        String usersession = (String)session.getAttribute("username");
+        if(usersession == null)
+        {
+        	response.sendRedirect("../login.jsp?error=sessionExpired");
+        	return;
+        }
+        %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,8 +55,10 @@
     <div class="header">
         <h3>User Portal</h3>
         <div>
-            <span>Welcome, <strong><%= (String)session.getAttribute("username") %></strong></span>
-            <a href="<%= request.getContextPath() %>/login.jsp" class="logout-btn">Logout</a>
+       
+   
+            <span>Welcome, <strong><%=usersession %></strong></span>
+            <a href="<%= request.getContextPath() %>/LogoutServlet" class="logout-btn">Logout</a>
 
         </div>
     </div>

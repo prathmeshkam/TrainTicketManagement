@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+    String usersession = (String) session.getAttribute("username");
+    if (usersession == null) {
+        response.sendRedirect("../login.jsp?error=sessionExpired");
+        return;
+    }
+%>
 
 <!DOCTYPE html>
 <html lang="en">

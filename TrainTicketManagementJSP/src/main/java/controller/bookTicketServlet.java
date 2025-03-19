@@ -29,7 +29,13 @@ public class bookTicketServlet extends HttpServlet {
 	        int totalpay = 100 * noOfTickets;
 	        // Use DAO to book train
 	       
-	        boolean isBooked = bookTicketDao.bookTrain(trainNumber, trainName, sdate, passengerName, passengerAge, gender, travelClass, paymentMode,noOfTickets , totalpay);
+	        boolean isBooked = false;
+			try {
+				isBooked = bookTicketDao.bookTrain(trainNumber, trainName, sdate, passengerName, passengerAge, gender, travelClass, paymentMode,noOfTickets , totalpay);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 	        // Redirect based on booking result
 	        if (isBooked) {

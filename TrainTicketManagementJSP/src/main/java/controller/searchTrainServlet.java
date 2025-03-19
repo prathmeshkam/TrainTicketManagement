@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.AddTrainDao;
 import dao.searchTrainDao;
@@ -23,7 +24,11 @@ import model.Train;
 @WebServlet("/searchTrainServlet")
 public class searchTrainServlet extends HttpServlet{
 	 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		 HttpSession session = request.getSession(false); // Don't create a new session
+		    if (session == null || session.getAttribute("username") == null) {
+		        response.sendRedirect("login.jsp?error=sessionExpired");
+		        return;
+		    }
 	        String ostation = request.getParameter("from");
 	        String dstation = request.getParameter("to");
 	        String ppdate = request.getParameter("date");

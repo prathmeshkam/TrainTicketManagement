@@ -29,19 +29,20 @@
         <div class="col text-center">
             <h3 class="mb-0">Manage Tickets</h3>
         </div>
-        <%-- <div class="col-auto">
-            <span class="me-3">Welcome, <strong><%= request.getAttribute("username") %></strong></span>
-            <a href="login.jsp" class="btn btn-danger">Logout</a>
-        </div> --%>
     </div>
 </div>
 
-<div class="container mt-5">
+<!-- Search Box -->
+<div class="container mt-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search by Train Name, Number, or Date...">
+</div>
+
+<div class="container mt-4">
     <% if (rs != null && rs.next()) { %>  
     <div class="card shadow-lg p-4">
         <h2 class="text-center text-primary mb-4">Your Bookings</h2>
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover" id="bookingsTable">
                 <thead class="table-dark">
                     <tr>
                         <th>Train Number</th>
@@ -61,7 +62,7 @@
                         <td><%= rs.getString("class") %></td>
                         <td><%= rs.getString("noofticket") %></td>
                         <td><%= rs.getString("status") %></td>
-                        <td><%= rs.getInt("totalpay") %></td> <!-- Assuming 1 ticket per booking -->
+                        <td><%= rs.getInt("totalpay") %></td>
                         <td>
                             <form action="<%= request.getContextPath() %>/deleteTicketServlet" method="post">
                                 <input type="hidden" name="bookingId" value="<%= rs.getInt("id") %>">
@@ -82,6 +83,30 @@
     </div>
     <% } %>  
 </div>
+
+<!-- JavaScript for Filtering Table -->
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toUpperCase();
+        let table = document.getElementById("bookingsTable").getElementsByTagName("tbody")[0];
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let trainNumber = rows[i].getElementsByTagName("td")[0]; // Train Number column
+            let trainName = rows[i].getElementsByTagName("td")[1]; // Train Name column
+            let trainClass = rows[i].getElementsByTagName("td")[2]; // Class column
+
+            if (trainNumber && trainName && trainClass) {
+                let textValue =
+                    trainNumber.textContent.toUpperCase() + 
+                    trainName.textContent.toUpperCase() + 
+                    trainClass.textContent.toUpperCase();
+
+                rows[i].style.display = textValue.includes(filter) ? "" : "none";
+            }
+        }
+    });
+</script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

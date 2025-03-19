@@ -5,11 +5,18 @@
 <% List<Train> trainList = (List<Train>) request.getAttribute("trainList"); %>
 
 <div class="container mx-auto px-4 mt-6">
+    
+    <!-- Search Box -->
+    <div class="mb-4">
+        <input type="text" id="searchInput" class="w-full p-2 border border-gray-300 rounded" 
+               placeholder="Search by Train Name, Number, Origin, Destination, or Date...">
+    </div>
+
     <% if (trainList != null && !trainList.isEmpty()) { %>
     <div class="bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-lg font-bold text-gray-800 mb-4">Available Trains</h2>
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-gray-200">
+            <table class="min-w-full bg-white border border-gray-200" id="trainsTable">
                 <thead>
                     <tr class="bg-gray-100 border-b">
                         <th class="py-2 px-4 border">Train Number</th>
@@ -59,6 +66,34 @@
     </div>
     <% } %>
 </div>
+
+<!-- JavaScript for Filtering Trains -->
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function () {
+        let filter = this.value.toUpperCase();
+        let table = document.getElementById("trainsTable").getElementsByTagName("tbody")[0];
+        let rows = table.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            let trainNumber = rows[i].getElementsByTagName("td")[0]; // Train Number column
+            let trainName = rows[i].getElementsByTagName("td")[1]; // Train Name column
+            let origin = rows[i].getElementsByTagName("td")[2]; // Origin column
+            let destination = rows[i].getElementsByTagName("td")[3]; // Destination column
+            let trainDate = rows[i].getElementsByTagName("td")[7]; // Date column
+
+            if (trainNumber && trainName && origin && destination && trainDate) {
+                let textValue =
+                    trainNumber.textContent.toUpperCase() + 
+                    trainName.textContent.toUpperCase() + 
+                    origin.textContent.toUpperCase() + 
+                    destination.textContent.toUpperCase() +
+                    trainDate.textContent.toUpperCase();
+
+                rows[i].style.display = textValue.includes(filter) ? "" : "none";
+            }
+        }
+    });
+</script>
 
 <!-- Include the Popup Modal -->
 <jsp:include page="bookingpopup.jsp" />
