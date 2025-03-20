@@ -242,22 +242,6 @@ public class Admin {
 
     private static void bookTicket(TrainManagementDao tm, Scanner sc, Train selectedTrain) {
         try {
-            System.out.print("Enter Passenger Name: ");
-            String name = sc.nextLine();
-            
-            System.out.print("Enter Age: ");
-            int age = sc.nextInt();
-            sc.nextLine(); // Consume newline
-            
-            System.out.print("Enter Gender (Male/Female/Other): ");
-            String gender = sc.nextLine();
-            
-            System.out.print("Enter Class (1AC, 2AC, 3AC, Sleeper, SS): ");
-            String travelClass = sc.nextLine();
-            
-            System.out.print("Enter Payment Mode (Google Pay, PhonePe): ");
-            String paymentMode = sc.nextLine();
-            
             System.out.print("Enter Number of Tickets: ");
             int numTickets = sc.nextInt();
             sc.nextLine(); // Consume newline
@@ -269,11 +253,33 @@ public class Admin {
             String confirm = sc.nextLine().trim().toUpperCase();
 
             if (confirm.equals("Y")) {
-                tm.bookTicket(
-                    selectedTrain.getTrainNumber(), selectedTrain.getTrainName(), selectedTrain.getTraindate(), 
-                    name, age, gender, travelClass, paymentMode, numTickets
-                );
-                System.out.println("Ticket Booked Successfully!");
+                for (int i = 1; i <= numTickets; i++) {
+                    System.out.println("\nEnter Details for Passenger " + i + ":");
+
+                    System.out.print("Enter Passenger Name: ");
+                    String name = sc.nextLine();
+
+                    System.out.print("Enter Age: ");
+                    int age = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+
+                    System.out.print("Enter Gender (Male/Female/Other): ");
+                    String gender = sc.nextLine();
+
+                    System.out.print("Enter Class (1AC, 2AC, 3AC, Sleeper, SS): ");
+                    String travelClass = sc.nextLine();
+
+                    System.out.print("Enter Payment Mode (Google Pay, PhonePe): ");
+                    String paymentMode = sc.nextLine();
+
+                    // ✅ Book each passenger separately
+                    tm.bookTicket(
+                        selectedTrain.getTrainNumber(), selectedTrain.getTrainName(), selectedTrain.getTraindate(), 
+                        name, age, gender, travelClass, paymentMode, 1 // Booking 1 ticket per passenger
+                    );
+
+                    System.out.println("Passenger " + i + " Ticket Booked Successfully!\n");
+                }
             } else {
                 System.out.println("Booking Cancelled.");
             }
@@ -282,6 +288,7 @@ public class Admin {
             System.out.println("Error booking ticket: " + e.getMessage());
         }
     }
+
     
     private static void manageTickets(TrainManagementDao tm, Scanner sc) {
         try {
