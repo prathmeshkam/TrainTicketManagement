@@ -41,7 +41,7 @@
             <label for="destinationStation">Destination Station:</label>
             <input type="text" id="destinationStation" name="destinationStation" required>
             <label for="trainDate">Train Date:</label>
-            <input type="date" id="trainDate" name="trainDate" min="2025-03-12" required>
+            <input type="date" id="trainDate" name="trainDate" min="2025-03-19" id="dateField" required>
             <label for="arrivalTime">Arrival Time:</label>
             <input type="time" id="arrivalTime" name="arrivalTime" required>
             <label for="departureTime">Departure Time:</label>
@@ -60,6 +60,12 @@
             <input type="number" id="numberOfSeats" name="numberOfSeats" min="0" required>
             <input type="submit" value="Submit">
         </form>
+        <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let today = new Date().toISOString().split("T")[0];
+        document.getElementById("dateField").setAttribute("min", today);
+    });
+</script>
     </section>
 </body>
 </html>

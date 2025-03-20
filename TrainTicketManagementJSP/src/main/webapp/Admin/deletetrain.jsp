@@ -29,17 +29,19 @@
         <div class="col text-center">
             <h3 class="mb-0">Delete Trains</h3>
         </div>
-        <%-- <div class="col-auto">
-            <span class="me-3">Welcome, <strong><%= request.getAttribute("username") %></strong></span>
-            <a href="login.jsp" class="btn btn-danger">Logout</a>
-        </div> --%>
     </div>
 </div>
 
 <!-- Train List -->
 <div class="container mt-4">
     <h2 class="text-center">Train List</h2>
-    <table class="table table-bordered text-center">
+
+    <!-- Search Bar -->
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search by Train Number, Name, Origin, or Destination..." onkeyup="searchTable()">
+    </div>
+
+    <table class="table table-bordered text-center" id="trainTable">
         <thead>
             <tr>
                 <th>Train Number</th>
@@ -54,26 +56,45 @@
                 ResultSet rs = showtrains.display();
                 while (rs.next()) { 
             %>
-            <tr id="row-<%= rs.getInt("trainNumber") %>">
+            <tr>
                 <td><%= rs.getInt("trainNumber") %></td>
                 <td><%= rs.getString("trainName") %></td>
                 <td><%= rs.getString("originStation") %></td>
                 <td><%= rs.getString("destinationStation") %></td>
                 <td>
-    <form action="../deleteTrainServlet" method="post">
-        <input type="hidden" name="trainNumber" value="<%= rs.getInt("trainNumber") %>">
-        <input type="submit" class="btn btn-danger btn-sm" value="Delete">
-      
-    </form>
-</td>
-
+                    <form action="../deleteTrainServlet" method="post">
+                        <input type="hidden" name="trainNumber" value="<%= rs.getInt("trainNumber") %>">
+                        <input type="submit" class="btn btn-danger btn-sm" value="Delete">
+                    </form>
+                </td>
             </tr>
             <% } %>
         </tbody>
     </table>
 </div>
 
+<!-- JavaScript for Searching -->
+<script>
+    function searchTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let table = document.getElementById("trainTable");
+        let rows = table.getElementsByTagName("tr");
 
+        for (let i = 1; i < rows.length; i++) { // Skip header row
+            let cols = rows[i].getElementsByTagName("td");
+            let trainNumber = cols[0].innerText.toLowerCase();
+            let trainName = cols[1].innerText.toLowerCase();
+            let origin = cols[2].innerText.toLowerCase();
+            let destination = cols[3].innerText.toLowerCase();
+
+            if (trainNumber.includes(input) || trainName.includes(input) || origin.includes(input) || destination.includes(input)) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+        }
+    }
+</script>
 
 </body>
 </html>

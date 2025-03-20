@@ -23,7 +23,9 @@
                         <th class="py-2 px-4 border">Train Name</th>
                         <th class="py-2 px-4 border">Origin</th>
                         <th class="py-2 px-4 border">Destination</th>
-                        <th class="py-2 px-4 border">Departure</th>
+<th class="py-2 px-4 border cursor-pointer" onclick="sortTableByDeparture()">
+    Departure ⬍
+</th>
                         <th class="py-2 px-4 border">Arrival</th>
                         <th class="py-2 px-4 border">Seats Available</th>
                         <th class="py-2 px-4 border">Date</th>
@@ -93,6 +95,31 @@
             }
         }
     });
+    
+    
+    let sortOrder = 1; // 1 for ascending, -1 for descending
+
+    function sortTableByDeparture() {
+        let table = document.getElementById("trainsTable").getElementsByTagName("tbody")[0];
+        let rows = Array.from(table.getElementsByTagName("tr"));
+
+        rows.sort((rowA, rowB) => {
+            let timeA = rowA.getElementsByTagName("td")[4].textContent.trim();
+            let timeB = rowB.getElementsByTagName("td")[4].textContent.trim();
+
+            // Convert "HH:mm" format to Date object for comparison
+            let dateA = new Date("1970-01-01 " + timeA);
+            let dateB = new Date("1970-01-01 " + timeB);
+
+            return (dateA - dateB) * sortOrder;
+        });
+
+        // Reorder table rows
+        rows.forEach(row => table.appendChild(row));
+
+        // Toggle sorting order for next click
+        sortOrder *= -1;
+    }
 </script>
 
 <!-- Include the Popup Modal -->
